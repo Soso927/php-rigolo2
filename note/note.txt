@@ -1,1 +1,40 @@
-{"qsdfV45":0,"lhGtF62":1,"GFoP5s":2,"YvKJhc23":3,"MvDF34":4}
+{
+  "exercices": {
+    "helpers": {
+      "ok": "lhGtF62",
+      "points": 1
+    },
+    "classe": {
+      "ok": "lhGtF62",
+      "points": 1
+    },
+    "note": {
+      "ok": "lhGtF62",
+      "points": 1
+    },
+    "menu": {
+      "ok": "GFoP5s",
+      "points": 2
+    },
+    "referencement": {
+      "ok": "GFoP5s",
+      "points": 2
+    },
+    "vignettes": {
+      "ok": "GFoP5s",
+      "points": 2
+    },
+    "morpion": {
+      "ok": "MvDF34",
+      "points": 4
+    },
+    "news": {
+      "ok": "MvDF34",
+      "points": 4
+    },
+    "csv": {
+      "ok": "YvKJhc23",
+      "points": 3
+    }
+  }
+}

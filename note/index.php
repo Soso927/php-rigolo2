@@ -8,9 +8,48 @@
     note.txt au format JSON, vous devez faire la correspondance entre ces données et les données envoyées par le
     formulaire.
   </p>
-
+ 
   <!-- Début de votre PHP-->
-  <div class="MegaNote">20/20</div>
+  <?php
+// 1. Charger le JSON (note.json est à la racine du projet)
+$pathJson = __DIR__ . "/note.txt";
+if (!file_exists($pathJson)) {
+  // Message utile de debug + on évite un fatal error
+  echo '<div class="MegaNote">Fichier note.json introuvable</div>';
+} else {
+  $raw  = file_get_contents($pathJson);
+  $data = json_decode($raw, true);
+
+  if (json_last_error() !== JSON_ERROR_NONE || !isset($data['exercices']) || !is_array($data['exercices'])) {
+    echo '<div class="MegaNote">JSON invalide</div>';
+  } else {
+    // 2. Initialiser les compteurs
+    $totalPoints    = 0;
+    $pointsObtenus  = 0;
+
+    // ➜ Toujours calculer le total pour afficher X / Y même sans submit
+    foreach ($data['exercices'] as $rule) {
+      $totalPoints += (int)($rule['points'] ?? 0);
+    }
+
+    // 3. Si le formulaire est soumis, on calcule les points obtenus
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      foreach ($data['exercices'] as $name => $regle) {
+        $attendu = $regle['ok'] ?? null;                 // valeur attendue (OUI)
+        $points  = (int)($regle['points'] ?? 0);
+        $recu    = $_POST[$name] ?? null;                // valeur reçue
+
+        if ($attendu !== null && $recu === $attendu) {
+          $pointsObtenus += $points;
+        }
+      }
+    }
+
+    // 4. Afficher la note
+    echo '<div class="MegaNote">' . $pointsObtenus . '/' . $totalPoints . '</div>';
+  }
+}
+?>
   <!-- Fin de votre PHP-->
 
   <h2>Avez-vous réussi les exercices suivants :</h2>
@@ -20,11 +59,11 @@
         <tr>
           <td class="lead">Exercice "Les helpers"</td>
           <td align="right"><label class="radio-inline">
-              <input type="radio" name="helpers" checked value="qsdfV45">NON
-            </label>
-            <label class="radio-inline">
+              <input type="radio" name="helpers" value="qsdfV45">NON
+              </label>
               <input type="radio" name="helpers" value="lhGtF62">OUI
-            </label>
+              </label>
+
           </td>
         </tr>
         <tr>

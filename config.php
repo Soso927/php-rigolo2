@@ -3,21 +3,32 @@ session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 date_default_timezone_set('UTC');
-
+ 
 define('URL_ROOT', str_replace('\\', '/', 'http://' . $_SERVER['HTTP_HOST'] . str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', realpath(__DIR__))));
-
+ 
 // A adapter en fonction de votre base de données
 define('NOM_DB', 'php-rigolo');
 define('UTILISATEUR_DB', 'root');
 define('MDP_DB', '');
-
-$dbconnexion = new PDO('mysql:host=localhost;dbname=' . NOM_DB, UTILISATEUR_DB, MDP_DB, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-
-
-
-
-$NbreElementLigne = 3;
-
+ 
+// Connexion PDO moderne (utf8mb4, erreurs en exceptions, fetch assoc)
+$dsn = 'mysql:host=127.0.0.1;port=3306;dbname=' . NOM_DB . ';charset=utf8mb4';
+ 
+$pdo = new PDO($dsn, UTILISATEUR_DB, MDP_DB, [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+]);
+ 
+// Compatibilité si du code ancien utilise encore $dbconnexion
+$dbconnexion = $pdo;
+ 
+ 
+ 
+$NbreElementLigne = 1;
+ 
+ 
+ 
 $menu['Les helpers'] = array();
 $menu['Les helpers']['link'] = 'helpers/';
 $menu['Les helpers']['titre'] = 'Les helpers';
