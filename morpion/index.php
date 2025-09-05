@@ -12,6 +12,36 @@
 
   <!-- Début php -->
 
+<?php
+// Démarrage de la session : indispensable pour utiliser $_SESSION
+session_start($_SESSION);
+
+/**
+ * Génère un token CSRF et le stocke en session si non déjà présent
+ * @return string Le token CSRF
+ */
+function generateToken(): string {
+    // Vérifie si le token CSRF existe déjà en session
+    if (empty($_SESSION['csrf'])) {
+        // Génère 16 octets aléatoires, convertis en hexadécimal (sécurisé)
+        $_SESSION['csrf'] = bin2hex(random_bytes(16));
+    }
+
+    // Retourne le token CSRF (existant ou nouvellement généré)
+    return $_SESSION['csrf']; // ✅ Correction : point-virgule ajouté
+}
+
+/**
+ * Vérifie si le token CSRF fourni est valide
+ * @param string|null $token Le token CSRF à vérifier
+ * @return bool true si le token est valide, false sinon
+ */
+function check_csrf(?string $token): bool {
+    // Vérifie que le token est présent en session ET qu'il correspond exactement à celui fourni
+    return isset($_SESSION['csrf']) && hash_equals($_SESSION['csrf'], (string)$token);
+}
+
+?>
   <div style="text-align:center;margin-bottom:30px;width:100%;"><a href="<?= URL_ROOT ?>/morpion/?rejouer=ok"
       class="btn btn-info" style="font-size:50px;padding-left:100px;padding-right:100px;">Bravo, tu as gagné
       !!<br>Rejouer une partie</a></div>
